@@ -2,11 +2,16 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.3
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 SET search_path = system, pg_catalog;
 
@@ -417,8 +422,11 @@ INSERT INTO setting (name, vl, active, description) VALUES ('db-utilities-folder
 INSERT INTO setting (name, vl, active, description) VALUES ('community-name', 'Open Community', true, 'Community name');
 INSERT INTO setting (name, vl, active, description) VALUES ('ot-title-plan-crs-wkt', '', true, 'Custom Coordinate Reference System in WKT format of the map image, generated for claim certificate in OpenTenure');
 INSERT INTO setting (name, vl, active, description) VALUES ('claim_cetificate_report_url', '/reports/cert/Claim_certificate', true, 'URL to the claim certificate report, hosted on the reporting server');
-INSERT INTO setting (name, vl, active, description) VALUES ('enable-reports', '0', true, 'Indicates whether reports are enbled or disabled. 1 - enabled, 0 - disabled');
 INSERT INTO setting (name, vl, active, description) VALUES ('offline-mode', '0', true, 'Indicates whether Community Server is connected to the Internet or not. 0 - connected, 1 - not connected');
+INSERT INTO setting (name, vl, active, description) VALUES ('enable-reports', '1', true, 'Indicates whether reports are enbled or disabled. 1 - enabled, 0 - disabled');
+INSERT INTO setting (name, vl, active, description) VALUES ('form23_report_url', '/reports/cert/Form23', true, 'Path to form23 report');
+INSERT INTO setting (name, vl, active, description) VALUES ('docs_for_issuing_cco', 'abstract_book,signed_cco', true, 'List of document type codes, required to set CCO issued status');
+INSERT INTO setting (name, vl, active, description) VALUES ('docs-for-issuing-cco', 'abstract_book,signed_cco', true, 'List of document type codes, required to set CCO issued status');
 
 
 ALTER TABLE setting ENABLE TRIGGER ALL;
@@ -438,6 +446,8 @@ INSERT INTO version (version_num) VALUES ('1508b');
 INSERT INTO version (version_num) VALUES ('1511a');
 INSERT INTO version (version_num) VALUES ('1512a');
 INSERT INTO version (version_num) VALUES ('1606a');
+INSERT INTO version (version_num) VALUES ('1611a');
+INSERT INTO version (version_num) VALUES ('1612a');
 
 
 ALTER TABLE version ENABLE TRIGGER ALL;

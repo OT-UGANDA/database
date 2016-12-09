@@ -2,11 +2,16 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.3
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 SET search_path = system, pg_catalog;
 
@@ -67,6 +72,7 @@ INSERT INTO approle_appgroup (approle_code, appgroup_id, rowidentifier, rowversi
 INSERT INTO approle_appgroup (approle_code, appgroup_id, rowidentifier, rowversion, change_action, change_user, change_time) VALUES ('01SEC_Unrestricted', 'ff94bfad-7079-41ea-bf4b-6962e36cad1f', 'a91afd78-3921-4993-a256-f7b2482c081b', 1, 'i', 'test', '2015-02-27 15:31:06.736');
 INSERT INTO approle_appgroup (approle_code, appgroup_id, rowidentifier, rowversion, change_action, change_user, change_time) VALUES ('02SEC_Restricted', 'ff94bfad-7079-41ea-bf4b-6962e36cad1f', '1bfe00f6-6b0e-42d2-9c12-a779593a8f24', 1, 'i', 'test', '2015-02-27 15:31:06.736');
 INSERT INTO approle_appgroup (approle_code, appgroup_id, rowidentifier, rowversion, change_action, change_user, change_time) VALUES ('ViewReports', 'super-group-id', '2c4da65a-43f6-11e5-9c67-9f326dbd1cf8', 1, 'i', 'db:postgres', '2015-08-16 15:07:08.677');
+INSERT INTO approle_appgroup (approle_code, appgroup_id, rowidentifier, rowversion, change_action, change_user, change_time) VALUES ('PrintCertificate', 'super-group-id', 'a6f07a7c-bd8a-11e6-97ee-3f8a0c1e5240', 1, 'i', 'db:postgres', '2016-12-09 03:09:48.517672');
 
 
 ALTER TABLE approle_appgroup ENABLE TRIGGER ALL;
