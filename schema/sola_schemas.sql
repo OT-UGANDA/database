@@ -11844,7 +11844,10 @@ CREATE TABLE claim_share (
     change_action character(1) DEFAULT 'i'::bpchar NOT NULL,
     change_user character varying(50),
     change_time timestamp without time zone DEFAULT now() NOT NULL,
-    percentage double precision
+    percentage double precision,
+    status character(1) DEFAULT 'a'::bpchar NOT NULL,
+    registration_date date,
+    termination_date date
 );
 
 
@@ -11928,6 +11931,27 @@ COMMENT ON COLUMN claim_share.percentage IS 'Percentage of the share. Another fo
 
 
 --
+-- Name: COLUMN claim_share.status; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim_share.status IS 'Indicating the status of the share. a - active (approved), h - historic, p - pending.';
+
+
+--
+-- Name: COLUMN claim_share.registration_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim_share.registration_date IS 'Registration date of the share. For initial claims must be equal to the date of the claim approval';
+
+
+--
+-- Name: COLUMN claim_share.termination_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim_share.termination_date IS 'Termination date of the share (when share became historic)';
+
+
+--
 -- Name: claim_share_historic; Type: TABLE; Schema: opentenure; Owner: postgres
 --
 
@@ -11942,7 +11966,10 @@ CREATE TABLE claim_share_historic (
     change_user character varying(50),
     change_time timestamp without time zone,
     change_time_valid_until timestamp without time zone DEFAULT now() NOT NULL,
-    percentage double precision
+    percentage double precision,
+    status character(1),
+    registration_date date,
+    termination_date date
 );
 
 
