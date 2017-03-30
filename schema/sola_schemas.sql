@@ -13266,6 +13266,97 @@ CREATE TABLE party_for_claim_share_historic (
 ALTER TABLE party_for_claim_share_historic OWNER TO postgres;
 
 --
+-- Name: party_for_restriction; Type: TABLE; Schema: opentenure; Owner: postgres
+--
+
+CREATE TABLE party_for_restriction (
+    party_id character varying(40) NOT NULL,
+    restriction_id character varying(40) NOT NULL,
+    rowidentifier character varying(40) DEFAULT public.uuid_generate_v1() NOT NULL,
+    rowversion integer DEFAULT 0 NOT NULL,
+    change_action character(1) DEFAULT 'i'::bpchar NOT NULL,
+    change_user character varying(50),
+    change_time timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE party_for_restriction OWNER TO postgres;
+
+--
+-- Name: TABLE party_for_restriction; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON TABLE party_for_restriction IS 'Identifies parties involved in the restriction.';
+
+
+--
+-- Name: COLUMN party_for_restriction.party_id; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.party_id IS 'Identifier for the party.';
+
+
+--
+-- Name: COLUMN party_for_restriction.restriction_id; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.restriction_id IS 'Identifier of the restriction.';
+
+
+--
+-- Name: COLUMN party_for_restriction.rowidentifier; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.rowidentifier IS 'Identifies the all change records for the row in the party_for_claim_share_historic table';
+
+
+--
+-- Name: COLUMN party_for_restriction.rowversion; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.rowversion IS 'Sequential value indicating the number of times this row has been modified.';
+
+
+--
+-- Name: COLUMN party_for_restriction.change_action; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.change_action IS 'Indicates if the last data modification action that occurred to the row was insert (i), update (u) or delete (d).';
+
+
+--
+-- Name: COLUMN party_for_restriction.change_user; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.change_user IS 'The user id of the last person to modify the row.';
+
+
+--
+-- Name: COLUMN party_for_restriction.change_time; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN party_for_restriction.change_time IS 'The date and time the row was last modified.';
+
+
+--
+-- Name: party_for_restriction_historic; Type: TABLE; Schema: opentenure; Owner: postgres
+--
+
+CREATE TABLE party_for_restriction_historic (
+    party_id character varying(40),
+    restriction_id character varying(40),
+    rowidentifier character varying(40),
+    rowversion integer,
+    change_action character(1),
+    change_user character varying(50),
+    change_time timestamp without time zone,
+    change_time_valid_until timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE party_for_restriction_historic OWNER TO postgres;
+
+--
 -- Name: party_historic; Type: TABLE; Schema: opentenure; Owner: postgres
 --
 
@@ -13349,6 +13440,169 @@ COMMENT ON COLUMN rejection_reason.status IS 'Status of the rejection reason.';
 
 COMMENT ON COLUMN rejection_reason.description IS 'Description of the rejection reason.';
 
+
+--
+-- Name: restriction; Type: TABLE; Schema: opentenure; Owner: postgres
+--
+
+CREATE TABLE restriction (
+    id character varying(40) DEFAULT public.uuid_generate_v1() NOT NULL,
+    claim_id character varying(40) NOT NULL,
+    type_code character varying(20) NOT NULL,
+    amount numeric(29,2),
+    start_date date,
+    end_date date,
+    interest_rate numeric(5,2),
+    registration_date timestamp without time zone DEFAULT now() NOT NULL,
+    termination_date timestamp without time zone,
+    status character(1) DEFAULT 'a'::bpchar NOT NULL,
+    rowidentifier character varying(40) DEFAULT public.uuid_generate_v1() NOT NULL,
+    rowversion integer DEFAULT 0 NOT NULL,
+    change_action character(1) DEFAULT 'i'::bpchar NOT NULL,
+    change_user character varying(50),
+    change_time timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE restriction OWNER TO postgres;
+
+--
+-- Name: TABLE restriction; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON TABLE restriction IS 'Various claim restrictions.';
+
+
+--
+-- Name: COLUMN restriction.id; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.id IS 'Unique identifier for the restriction.';
+
+
+--
+-- Name: COLUMN restriction.claim_id; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.claim_id IS 'Claim ID.';
+
+
+--
+-- Name: COLUMN restriction.type_code; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.type_code IS 'Restriction type code.';
+
+
+--
+-- Name: COLUMN restriction.amount; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.amount IS 'Mortgage amount';
+
+
+--
+-- Name: COLUMN restriction.start_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.start_date IS 'Restriction start date. For mortgage start date of payment.';
+
+
+--
+-- Name: COLUMN restriction.end_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.end_date IS 'Restriction end date.';
+
+
+--
+-- Name: COLUMN restriction.interest_rate; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.interest_rate IS 'Mortgage interest rate.';
+
+
+--
+-- Name: COLUMN restriction.registration_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.registration_date IS 'Date when restriction was registered.';
+
+
+--
+-- Name: COLUMN restriction.termination_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.termination_date IS 'Date when restriction was terminated.';
+
+
+--
+-- Name: COLUMN restriction.status; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.status IS 'Indicating the status of the restriction. a - active (approved), h - historic, p - pending.';
+
+
+--
+-- Name: COLUMN restriction.rowidentifier; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.rowidentifier IS 'Identifies the all change records for the row in the document_historic table';
+
+
+--
+-- Name: COLUMN restriction.rowversion; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.rowversion IS 'Sequential value indicating the number of times this row has been modified.';
+
+
+--
+-- Name: COLUMN restriction.change_action; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.change_action IS 'Indicates if the last data modification action that occurred to the row was insert (i), update (u) or delete (d).';
+
+
+--
+-- Name: COLUMN restriction.change_user; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.change_user IS 'The user id of the last person to modify the row.';
+
+
+--
+-- Name: COLUMN restriction.change_time; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN restriction.change_time IS 'The date and time the row was last modified.';
+
+
+--
+-- Name: restriction_historic; Type: TABLE; Schema: opentenure; Owner: postgres
+--
+
+CREATE TABLE restriction_historic (
+    id character varying(40),
+    claim_id character varying(40),
+    type_code character varying(20),
+    amount numeric(29,2),
+    start_date date,
+    end_date date,
+    interest_rate numeric(5,2),
+    registration_date timestamp without time zone,
+    termination_date timestamp without time zone,
+    status character(1),
+    rowidentifier character varying(40),
+    rowversion integer,
+    change_action character(1),
+    change_user character varying(50),
+    change_time timestamp without time zone,
+    change_time_valid_until timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE restriction_historic OWNER TO postgres;
 
 --
 -- Name: section_element_payload; Type: TABLE; Schema: opentenure; Owner: postgres
@@ -18238,6 +18492,14 @@ ALTER TABLE ONLY party_for_claim_share
 
 
 --
+-- Name: party_for_restriction_pkey; Type: CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY party_for_restriction
+    ADD CONSTRAINT party_for_restriction_pkey PRIMARY KEY (party_id, restriction_id);
+
+
+--
 -- Name: rejection_reason_display_value_unique; Type: CONSTRAINT; Schema: opentenure; Owner: postgres
 --
 
@@ -18251,6 +18513,14 @@ ALTER TABLE ONLY rejection_reason
 
 ALTER TABLE ONLY rejection_reason
     ADD CONSTRAINT rejection_reason_pkey PRIMARY KEY (code);
+
+
+--
+-- Name: restriction_pkey; Type: CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY restriction
+    ADD CONSTRAINT restriction_pkey PRIMARY KEY (id);
 
 
 --
@@ -21466,6 +21736,20 @@ CREATE TRIGGER __track_changes BEFORE INSERT OR UPDATE ON field_payload FOR EACH
 
 
 --
+-- Name: __track_changes; Type: TRIGGER; Schema: opentenure; Owner: postgres
+--
+
+CREATE TRIGGER __track_changes BEFORE INSERT OR UPDATE ON restriction FOR EACH ROW EXECUTE PROCEDURE public.f_for_trg_track_changes();
+
+
+--
+-- Name: __track_changes; Type: TRIGGER; Schema: opentenure; Owner: postgres
+--
+
+CREATE TRIGGER __track_changes BEFORE INSERT OR UPDATE ON party_for_restriction FOR EACH ROW EXECUTE PROCEDURE public.f_for_trg_track_changes();
+
+
+--
 -- Name: __track_history; Type: TRIGGER; Schema: opentenure; Owner: postgres
 --
 
@@ -21582,6 +21866,20 @@ CREATE TRIGGER __track_history AFTER DELETE OR UPDATE ON section_element_payload
 --
 
 CREATE TRIGGER __track_history AFTER DELETE OR UPDATE ON field_payload FOR EACH ROW EXECUTE PROCEDURE public.f_for_trg_track_history();
+
+
+--
+-- Name: __track_history; Type: TRIGGER; Schema: opentenure; Owner: postgres
+--
+
+CREATE TRIGGER __track_history AFTER DELETE OR UPDATE ON restriction FOR EACH ROW EXECUTE PROCEDURE public.f_for_trg_track_history();
+
+
+--
+-- Name: __track_history; Type: TRIGGER; Schema: opentenure; Owner: postgres
+--
+
+CREATE TRIGGER __track_history AFTER DELETE OR UPDATE ON party_for_restriction FOR EACH ROW EXECUTE PROCEDURE public.f_for_trg_track_history();
 
 
 --
@@ -22768,6 +23066,38 @@ ALTER TABLE ONLY party_for_claim_share
 
 ALTER TABLE ONLY party_for_claim_share
     ADD CONSTRAINT party_for_claim_share_party_id_fk23 FOREIGN KEY (party_id) REFERENCES party(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: party_for_restriction_party_id_fk; Type: FK CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY party_for_restriction
+    ADD CONSTRAINT party_for_restriction_party_id_fk FOREIGN KEY (party_id) REFERENCES party(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: party_for_restriction_restriction_id_fk; Type: FK CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY party_for_restriction
+    ADD CONSTRAINT party_for_restriction_restriction_id_fk FOREIGN KEY (restriction_id) REFERENCES restriction(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: restriction_claim_id_fk; Type: FK CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY restriction
+    ADD CONSTRAINT restriction_claim_id_fk FOREIGN KEY (claim_id) REFERENCES claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: restriction_type_fk; Type: FK CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY restriction
+    ADD CONSTRAINT restriction_type_fk FOREIGN KEY (type_code) REFERENCES administrative.rrr_type(code);
 
 
 --
