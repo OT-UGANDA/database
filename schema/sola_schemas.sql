@@ -11320,6 +11320,10 @@ CREATE TABLE claim (
     rejection_reason_code character varying(20),
     claim_area bigint DEFAULT 0,
     issuance_date timestamp without time zone,
+    termination_date date,
+    termination_reason_code character varying(20),
+    create_transaction character varying(40),
+    terminate_transaction character varying(40),
     CONSTRAINT enforce_geotype_mapped_geometry CHECK (((public.geometrytype(mapped_geometry) = 'POLYGON'::text) OR (public.geometrytype(mapped_geometry) = 'POINT'::text) OR (public.geometrytype(mapped_geometry) = 'LINESTRING'::text) OR (mapped_geometry IS NULL))),
     CONSTRAINT enforce_valid_mapped_geometry CHECK (public.st_isvalid(mapped_geometry))
 );
@@ -11538,6 +11542,34 @@ COMMENT ON COLUMN claim.issuance_date IS 'Claim issuance date';
 
 
 --
+-- Name: COLUMN claim.termination_date; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim.termination_date IS 'Date when claim was terminated';
+
+
+--
+-- Name: COLUMN claim.termination_reason_code; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim.termination_reason_code IS 'Termination reason code';
+
+
+--
+-- Name: COLUMN claim.create_transaction; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim.create_transaction IS 'Transaction code, used to create claim. It used for split/merge transaction to link parent and children claims.';
+
+
+--
+-- Name: COLUMN claim.terminate_transaction; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN claim.terminate_transaction IS 'Transaction code, used to terminate claim. It used for split/merge transaction to link parent and children claims.';
+
+
+--
 -- Name: claim_comment; Type: TABLE; Schema: opentenure; Owner: postgres
 --
 
@@ -11682,7 +11714,11 @@ CREATE TABLE claim_historic (
     land_use_code character varying(20),
     rejection_reason_code character varying(20),
     claim_area bigint,
-    issuance_date timestamp without time zone
+    issuance_date timestamp without time zone,
+    termination_date date,
+    termination_reason_code character varying(20),
+    create_transaction character varying(40),
+    terminate_transaction character varying(40)
 );
 
 
@@ -13997,6 +14033,55 @@ CREATE TABLE section_template_historic (
 
 
 ALTER TABLE section_template_historic OWNER TO postgres;
+
+--
+-- Name: termination_reason; Type: TABLE; Schema: opentenure; Owner: postgres
+--
+
+CREATE TABLE termination_reason (
+    code character varying(20) NOT NULL,
+    display_value character varying(500) NOT NULL,
+    status character(1) DEFAULT 't'::bpchar NOT NULL,
+    description character varying(1000)
+);
+
+
+ALTER TABLE termination_reason OWNER TO postgres;
+
+--
+-- Name: TABLE termination_reason; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON TABLE termination_reason IS 'Code list of termination reasons which can happen to the claim.';
+
+
+--
+-- Name: COLUMN termination_reason.code; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN termination_reason.code IS 'The code for the termination reason.';
+
+
+--
+-- Name: COLUMN termination_reason.display_value; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN termination_reason.display_value IS 'Displayed value of the termination reason.';
+
+
+--
+-- Name: COLUMN termination_reason.status; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN termination_reason.status IS 'Status of the termination reason.';
+
+
+--
+-- Name: COLUMN termination_reason.description; Type: COMMENT; Schema: opentenure; Owner: postgres
+--
+
+COMMENT ON COLUMN termination_reason.description IS 'Description of the termination reason.';
+
 
 SET search_path = party, pg_catalog;
 
@@ -18555,6 +18640,22 @@ ALTER TABLE ONLY attachment_chunk
     ADD CONSTRAINT start_unique_document_chunk UNIQUE (attachment_id, start_position);
 
 
+--
+-- Name: termination_reason_display_value_unique; Type: CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY termination_reason
+    ADD CONSTRAINT termination_reason_display_value_unique UNIQUE (display_value);
+
+
+--
+-- Name: termination_reason_pkey; Type: CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY termination_reason
+    ADD CONSTRAINT termination_reason_pkey PRIMARY KEY (code);
+
+
 SET search_path = party, pg_catalog;
 
 --
@@ -23010,6 +23111,14 @@ ALTER TABLE ONLY claim
 
 ALTER TABLE ONLY claim
     ADD CONSTRAINT fk_claim_rejection_reason_code FOREIGN KEY (rejection_reason_code) REFERENCES rejection_reason(code);
+
+
+--
+-- Name: fk_claim_termination_reason; Type: FK CONSTRAINT; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE ONLY claim
+    ADD CONSTRAINT fk_claim_termination_reason FOREIGN KEY (termination_reason_code) REFERENCES termination_reason(code);
 
 
 --

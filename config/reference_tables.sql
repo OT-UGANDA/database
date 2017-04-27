@@ -476,6 +476,7 @@ INSERT INTO claim_status (code, display_value, status, description) VALUES ('wit
 INSERT INTO claim_status (code, display_value, status, description) VALUES ('rejected', 'Rejected::::::::رفضت::::Rejetée::::Rechazado::::I refuzuar::::Excluido::::បានច្រានចោល::::被拒绝::::Rejected', 'c', 'Status for rejected claims::::::::حالة الادعاءات المرفوضة::::Statut pour les déclarations rejetées::::Estatus de las peticiones rechazadas::::Statusi për pretendimet e refuzuara::::Estado dos requerimentos excluidos::::ស្ថានភាពសម្រាប់ការច្រានចោលបណ្តឹងទាមទា::::拒绝请求状态::::Status for rejected claims');
 INSERT INTO claim_status (code, display_value, status, description) VALUES ('reviewed', 'Reviewed::::::::روجعت::::Revue::::Revisado::::I rishikuar::::Revisado::::បានត្រួតពិនិត្យឡើងវិញ::::已审查::::ပြန်လည်သုံးသပ်မှု', 'c', 'Status for reviewed claims::::::::حالة الادعاءات التي تم مراجعتها::::Statut pour les déclarations revues::::Estatus de reclamaciones revisadas::::Statusi për pretendimet e rishikuara::::Estado dos requerimentos revisados::::ស្ថានភាពសម្រាប់ការត្រួតពិនិត្យឡើងវិញនៃបណ្តឹងទាមទា::::复查请求状态::::ပြန်လည်သုံးသပ်ရန် အဆိုပြု အဆင့်');
 INSERT INTO claim_status (code, display_value, status, description) VALUES ('issued', 'Issued', 'c', 'Final status for the claim, indicating it is issued to the owner');
+INSERT INTO claim_status (code, display_value, status, description) VALUES ('historic', 'Historic', 'c', 'Historic status, indicating that parcel was split or merged.');
 
 
 ALTER TABLE claim_status ENABLE TRIGGER ALL;
@@ -541,6 +542,18 @@ INSERT INTO rejection_reason (code, display_value, status, description) VALUES (
 
 
 ALTER TABLE rejection_reason ENABLE TRIGGER ALL;
+
+--
+-- Data for Name: termination_reason; Type: TABLE DATA; Schema: opentenure; Owner: postgres
+--
+
+ALTER TABLE termination_reason DISABLE TRIGGER ALL;
+
+INSERT INTO termination_reason (code, display_value, status, description) VALUES ('split', 'Parcel split', 'c', 'Termination as a result of parcel split');
+INSERT INTO termination_reason (code, display_value, status, description) VALUES ('merge', 'Parcels merge', 'c', 'Termination as a result of parcels merge');
+
+
+ALTER TABLE termination_reason ENABLE TRIGGER ALL;
 
 SET search_path = party, pg_catalog;
 
